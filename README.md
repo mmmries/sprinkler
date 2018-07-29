@@ -1,31 +1,28 @@
 # Sprinkler
 
-**TODO: Add description**
+A project for the remote nerve meetup
 
-## Targets
+## How To Get Your Project Started
 
-Nerves applications produce images for hardware targets based on the
-`MIX_TARGET` environment variable. If `MIX_TARGET` is unset, `mix` builds an
-image that runs on the host (e.g., your laptop). This is useful for executing
-logic tests, running utilities, and debugging. Other targets are represented by
-a short name like `rpi3` that maps to a Nerves system image for that platform.
-All of this logic is in the generated `mix.exs` and may be customized. For more
-information about targets see:
+Initialize a nerves project with a command like: `mix nerves.new sprinkler`.
+Now make modifications of adding `nerves_init_gadget` like [this](https://github.com/mmmries/sprinkler/compare/db25c00ced4eb1a627373c2b2229df67ac303887...bab60a8947c9142ef5987b1a0c86003eb320403b).
 
-https://hexdocs.pm/nerves/targets.html#content
+## Burn The Initial Image
 
-## Getting Started
+Mount your MicroSD card to the host machine and run a command like:
 
-To start your Nerves app:
-  * `export MIX_TARGET=my_target` or prefix every command with
-    `MIX_TARGET=my_target`. For example, `MIX_TARGET=rpi3`
-  * Install dependencies with `mix deps.get`
-  * Create firmware with `mix firmware`
-  * Burn to an SD card with `mix firmware.burn`
+```
+MIX_TARGET=rpi3 NERVES_NETWORK_SSID=MyWiFi NERVES_NETWORK_PSK=MyPassword mix do deps.get, firmware, firmware.burn
+```
 
-## Learn more
+Confirm that it's burning to the correct disk and follow the prompts to burn the image.
+Now put the MicroSD into your raspberry pi 3 and power it up.
+Within a few seconds you should be able to run `ping sprinkler.local` from your host machine and see that it gets ping results back.
 
-  * Official docs: https://hexdocs.pm/nerves/getting-started.html
-  * Official website: http://www.nerves-project.org/
-  * Discussion Slack elixir-lang #nerves ([Invite](https://elixir-slackin.herokuapp.com/))
-  * Source: https://github.com/nerves-project/nerves
+## How To Push Updates
+
+Once your device is up and running on your wifi you can push subsequent updates to the device with a command like:
+
+```
+MIX_TARGET=rpi3 NERVES_NETWORK_SSID=MyWiFi NERVES_NETWORK_PSK=MyPassword mix do firmware, firmware.push sprinkler.local
+```
