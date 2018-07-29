@@ -47,6 +47,7 @@ defmodule Sprinkler.MixProject do
 
   defp deps(target) do
     [
+      {:nerves_leds, "~> 0.8"},
       {:nerves_runtime, "~> 0.4"},
       {:nerves_init_gadget, "~> 0.4"}
     ] ++ system(target)

@@ -13,7 +13,7 @@ config :nerves, :firmware, rootfs_overlay: "rootfs_overlay"
 # docs for separating out critical OTP applications such as those
 # involved with firmware updates.
 config :shoehorn,
-  init: [:nerves_runtime, :nerves_init_gadget],
+  init: [:nerves_runtime, :nerves_init_gadget, :runtime_tools, :nerves_leds],
   app: Mix.Project.config()[:app]
 
 # Import target specific config. This must remain at the bottom
@@ -43,3 +43,5 @@ config :nerves_network, :default,
     psk: System.get_env("NERVES_NETWORK_PSK"),
     key_mgmt: String.to_atom(key_mgmt)
   ]
+
+config :nerves_leds, names: [status: "led0"]

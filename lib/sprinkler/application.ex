@@ -8,8 +8,6 @@ defmodule Sprinkler.Application do
   use Application
 
   def start(_type, _args) do
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Sprinkler.Supervisor]
     Supervisor.start_link(children(@target), opts)
   end
@@ -24,8 +22,7 @@ defmodule Sprinkler.Application do
 
   def children(_target) do
     [
-      # Starts a worker by calling: Sprinkler.Worker.start_link(arg)
-      # {Sprinkler.Worker, arg},
+      {Sprinkler.Blinky, nil}
     ]
   end
 end
