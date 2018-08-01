@@ -22,7 +22,8 @@ defmodule Sprinkler.Application do
 
   def children(_target) do
     [
-      {Sprinkler.Blinky, nil}
+      {Sprinkler.Blinky, nil},
+      {Sprinkler.Valve, {4, :zone1}},
     ]
   end
 end

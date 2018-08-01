@@ -5,6 +5,8 @@
 # is restricted to this project.
 use Mix.Config
 
+target = Mix.Project.config()[:target]
+
 # Customize non-Elixir parts of the firmware.  See
 # https://hexdocs.pm/nerves/advanced-configuration.html for details.
 config :nerves, :firmware, rootfs_overlay: "rootfs_overlay"
@@ -19,29 +21,30 @@ config :shoehorn,
 # Import target specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 # Uncomment to use target specific configurations
+if target != "host" do
+  config :nerves_firmware_ssh,
+    authorized_keys: [
+      File.read!(Path.join(System.user_home!(), ".ssh/id_rsa.pub"))
+    ]
 
-config :nerves_firmware_ssh,
-  authorized_keys: [
-    File.read!(Path.join(System.user_home!(), ".ssh/id_rsa.pub"))
-  ]
+  config :logger, backends: [RingLogger]
 
-config :logger, backends: [RingLogger]
+  config :nerves_init_gadget,
+    ifname: "wlan0",
+    address_method: :dhcp,
+    mdns_domain: "sprinkler.local",
+    node_name: "sprinkler",
+    node_host: :mdns_domain,
+    ssh_console_port: 22
 
-config :nerves_init_gadget,
-  ifname: "wlan0",
-  address_method: :dhcp,
-  mdns_domain: "sprinkler.local",
-  node_name: "sprinkler",
-  node_host: :mdns_domain,
-  ssh_console_port: 22
+  key_mgmt = System.get_env("NERVES_NETWORK_KEY_MGMT") || "WPA-PSK"
 
-key_mgmt = System.get_env("NERVES_NETWORK_KEY_MGMT") || "WPA-PSK"
+  config :nerves_network, :default,
+    wlan0: [
+      ssid: System.get_env("NERVES_NETWORK_SSID"),
+      psk: System.get_env("NERVES_NETWORK_PSK"),
+      key_mgmt: String.to_atom(key_mgmt)
+    ]
 
-config :nerves_network, :default,
-  wlan0: [
-    ssid: System.get_env("NERVES_NETWORK_SSID"),
-    psk: System.get_env("NERVES_NETWORK_PSK"),
-    key_mgmt: String.to_atom(key_mgmt)
-  ]
-
-config :nerves_leds, names: [status: "led0"]
+  config :nerves_leds, names: [status: "led0"]
+end
