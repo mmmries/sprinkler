@@ -1,6 +1,4 @@
 defmodule Sprinkler.Application do
-  # See https://hexdocs.pm/elixir/Application.html
-  # for more information on OTP Applications
   @moduledoc false
 
   @target Mix.Project.config()[:target]
@@ -12,18 +10,22 @@ defmodule Sprinkler.Application do
     Supervisor.start_link(children(@target), opts)
   end
 
-  # List all child processes to be supervised
   def children("host") do
-    [
-      # Starts a worker by calling: Sprinkler.Worker.start_link(arg)
-      # {Sprinkler.Worker, arg},
-    ]
+    []
   end
 
   def children(_target) do
+    import Supervisor.Spec
     [
       {Sprinkler.Blinky, nil},
-      {Sprinkler.Valve, {4, :zone1}},
+      worker(Sprinkler.Valve, [{4,  :zone1}], id: :zone1),
+      worker(Sprinkler.Valve, [{17, :zone2}], id: :zone2),
+      worker(Sprinkler.Valve, [{18, :zone3}], id: :zone3),
+      worker(Sprinkler.Valve, [{27, :zone4}], id: :zone4),
+      worker(Sprinkler.Valve, [{22, :zone5}], id: :zone5),
+      worker(Sprinkler.Valve, [{23, :zone6}], id: :zone6),
+      worker(Sprinkler.Valve, [{24, :zone7}], id: :zone7),
+      worker(Sprinkler.Valve, [{25, :zone8}], id: :zone8),
     ]
   end
 end
