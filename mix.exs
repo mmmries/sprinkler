@@ -38,6 +38,7 @@ defmodule Sprinkler.MixProject do
   defp deps do
     [
       {:nerves, "~> 1.0", runtime: false},
+      {:sched_ex, "~> 1.0"},
       {:shoehorn, "~> 0.2"}
     ] ++ deps(@target)
   end

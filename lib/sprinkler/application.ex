@@ -7,7 +7,12 @@ defmodule Sprinkler.Application do
 
   def start(_type, _args) do
     opts = [strategy: :one_for_one, name: Sprinkler.Supervisor]
-    Supervisor.start_link(children(@target), opts)
+    Supervisor.start_link(children(), opts)
+  end
+
+  def children do
+    list = children(@target)
+    [ {DynamicSupervisor, strategy: :one_for_one, name: :scheduler} | list ]
   end
 
   def children("host") do
