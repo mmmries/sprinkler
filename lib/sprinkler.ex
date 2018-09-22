@@ -1,18 +1,21 @@
 defmodule Sprinkler do
-  @moduledoc """
-  Documentation for Sprinkler.
-  """
+  @zones [:zone1, :zone2, :zone3, :zone4, :zone5, :zone6, :zone7, :zone8]
 
-  @doc """
-  Hello world.
+  # Example of scheduling a zone to turn on and off
+  # DynamicSupervisor.start_child(:scheduler, %{ id: "wat", start: {SchedEx, :run_every, [Sprinkler.Valve, :turn_off, [:zone8],  "0 30 9 * * *"]} })
+  # DynamicSupervisor.start_child(:scheduler, %{ id: "wat", start: {SchedEx, :run_every, [Sprinkler.Valve, :turn_off, [:zone8],  "0 45 9 * * *"]} })
 
-  ## Examples
+  def clear_schedule do
+    DynamicSupervisor.which_children(:scheduler)
+    |> Enum.map(&( elem(&1, 1) ))
+    |> Enum.each(fn(pid) -> DynamicSupervisor.terminate_child(:scheduler, pid) end)
+  end
 
-      iex> Sprinkler.hello
-      :world
+  def turn_on_all do
+    @zones |> Enum.each(&( Sprinkler.Valve.turn_on(&1) ))
+  end
 
-  """
-  def hello do
-    :world
+  def turn_off_all do
+    @zones |> Enum.each(&( Sprinkler.Valve.turn_off(&1) ))
   end
 end
