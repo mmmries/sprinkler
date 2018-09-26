@@ -51,7 +51,8 @@ defmodule Sprinkler.MixProject do
       {:elixir_ale, "~> 1.0"},
       {:nerves_leds, "~> 0.8"},
       {:nerves_runtime, "~> 0.4"},
-      {:nerves_init_gadget, "~> 0.4"}
+      {:nerves_init_gadget, "~> 0.4"},
+      {:nerves_time, "~> 0.2"},
     ] ++ system(target)
   end
 
