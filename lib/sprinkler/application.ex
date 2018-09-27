@@ -12,7 +12,13 @@ defmodule Sprinkler.Application do
 
   def children do
     list = children(@target)
-    [ {DynamicSupervisor, strategy: :one_for_one, name: :scheduler} | list ]
+    [
+      {DynamicSupervisor, strategy: :one_for_one, name: :scheduler},
+      {Sprinkler.Socket, []},
+      {Sprinkler.Channel, socket: Sprinkler.Socket, topic: "sprinkler"},
+      {Sprinkler.Reporter, name: Sprinkler.Reporter}
+      | list
+    ]
   end
 
   def children("host") do

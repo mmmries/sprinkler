@@ -18,6 +18,10 @@ config :shoehorn,
   init: [:nerves_runtime, :nerves_init_gadget, :runtime_tools, :nerves_leds],
   app: Mix.Project.config()[:app]
 
+config :sprinkler, Sprinkler.Socket,
+  url: System.get_env("WEBSOCKET_ADDRESS") || "ws://localhost:4000/socket/websocket",
+  serializer: Jason
+
 # Import target specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 # Uncomment to use target specific configurations
