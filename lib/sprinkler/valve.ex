@@ -6,6 +6,7 @@ defmodule Sprinkler.Valve do
     GenServer.start_link(__MODULE__, pin_number, name: name)
   end
 
+  def status(valve), do: GenServer.call(valve, :status)
   def turn_off(valve), do: GenServer.call(valve, :turn_off)
   def turn_on(valve),  do: GenServer.call(valve, :turn_on)
 
@@ -13,6 +14,10 @@ defmodule Sprinkler.Valve do
     {:ok, gpio} = GPIO.start_link(pin_number, :output)
     :ok = GPIO.write(gpio, 1)
     {:ok, {gpio, :off}}
+  end
+
+  def handle_call(:status, _from, {gpio, status}) do
+    {:reply, status, {gpio, status}}
   end
 
   def handle_call(:turn_on, _from, {gpio, :off}) do
