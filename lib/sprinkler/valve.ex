@@ -22,6 +22,7 @@ defmodule Sprinkler.Valve do
 
   def handle_call(:turn_on, _from, {gpio, :off}) do
     result = GPIO.write(gpio, 0)
+    Sprinkler.Reporter.nudge()
     {:reply, result, {gpio, :on}}
   end
 
@@ -35,6 +36,7 @@ defmodule Sprinkler.Valve do
 
   def handle_call(:turn_off, _from, {gpio, :on}) do
     result = GPIO.write(gpio, 1)
+    Sprinkler.Reporter.nudge()
     {:reply, result, {gpio, :off}}
   end
 end

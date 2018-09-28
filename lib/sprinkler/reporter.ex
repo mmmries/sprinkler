@@ -1,15 +1,24 @@
 defmodule Sprinkler.Reporter do
   use GenServer
-  @idle_timeout 2_000
+  @idle_timeout 300_000
   @zones [:zone1, :zone2, :zone3, :zone4, :zone5, :zone6, :zone7, :zone8]
 
   def start_link(opts) do
     GenServer.start_link(__MODULE__, nil, opts)
   end
 
+  def nudge(pid \\ __MODULE__) do
+    GenServer.cast(pid, :nudge)
+  end
+
   def init(nil) do
     Sprinkler.Channel.join()
     {:ok, nil, @idle_timeout}
+  end
+
+  def handle_cast(:nudge, state) do
+    report_status()
+    {:noreply, state, @idle_timeout}
   end
 
   def handle_info(:timeout, state) do
