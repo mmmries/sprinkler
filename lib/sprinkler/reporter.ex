@@ -42,6 +42,6 @@ defmodule Sprinkler.Reporter do
 
   defp send_status(zones) do
     {:ok, msg} = Jason.encode(%{"zones" => zones})
-    Gnat.pub(:gnat, "sprinkler.zones.mmmries", msg)
+    Gnat.pub(:gnat, "sprinkler.zones.#{Sprinkler.name()}", msg)
   end
 end
