@@ -22,6 +22,21 @@ config :sprinkler, Sprinkler.Socket,
   url: System.get_env("WEBSOCKET_ADDRESS") || "ws://localhost:4000/socket/websocket",
   serializer: Jason
 
+config :sprinkler, :gnat_connection, %{
+    name: :gnat,
+    connection_settings: [
+      %{host: '127.0.0.1', port: 4222},
+    ]
+  }
+
+config :sprinkler, :gnat_consumer, %{
+    connection_name: :gnat,
+    consuming_function: {Sprinkler.Command, :decode},
+    subscription_topics: [
+      %{topic: "sprinkler.commands.mmmries", queue_group: "sprinkler.commands.mmmries"},
+    ],
+  }
+
 # Import target specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 # Uncomment to use target specific configurations

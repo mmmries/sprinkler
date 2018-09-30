@@ -14,8 +14,8 @@ defmodule Sprinkler.Application do
     list = children(@target)
     [
       {DynamicSupervisor, strategy: :one_for_one, name: :scheduler},
-      {Sprinkler.Socket, []},
-      {Sprinkler.Channel, socket: Sprinkler.Socket, topic: "sprinkler"},
+      {Gnat.ConnectionSupervisor, Application.get_env(:sprinkler, :gnat_connection)},
+      {Gnat.ConsumerSupervisor, Application.get_env(:sprinkler, :gnat_consumer)},
       {Sprinkler.Reporter, name: Sprinkler.Reporter}
       | list
     ]
