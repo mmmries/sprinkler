@@ -33,7 +33,7 @@ config :sprinkler, :auth, %{
 config :sprinkler, :gnat_connection, %{
     name: :gnat,
     connection_settings: [
-      %{host: 'nats.riesd.com', port: 4223, tls: true},
+      %{host: 'nats.riesd.com', port: 4223, tls: true, username: System.get_env("NATS_USER"), password: System.get_env("NATS_PASS")},
     ]
   }
 
