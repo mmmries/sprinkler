@@ -12,7 +12,6 @@ defmodule Sprinkler.Reporter do
   end
 
   def init(nil) do
-    Sprinkler.Channel.join()
     {:ok, nil, @idle_timeout}
   end
 
@@ -42,6 +41,7 @@ defmodule Sprinkler.Reporter do
   end
 
   defp send_status(zones) do
-    Sprinkler.Channel.push("zone_status", %{"zones" => zones})
+    {:ok, msg} = Jason.encode(%{"zones" => zones})
+    Gnat.pub(:gnat, "sprinkler.zones.#{Sprinkler.name()}", msg)
   end
 end

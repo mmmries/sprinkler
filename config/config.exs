@@ -7,6 +7,9 @@ use Mix.Config
 
 target = Mix.Project.config()[:target]
 
+name = System.get_env("SPRINKLER_NAME") || "example"
+auth_token = System.get_env("SPRINKLER_AUTH_TOKEN") || ""
+
 # Customize non-Elixir parts of the firmware.  See
 # https://hexdocs.pm/nerves/advanced-configuration.html for details.
 config :nerves, :firmware, rootfs_overlay: "rootfs_overlay"
@@ -21,6 +24,26 @@ config :shoehorn,
 config :sprinkler, Sprinkler.Socket,
   url: System.get_env("WEBSOCKET_ADDRESS") || "ws://localhost:4000/socket/websocket",
   serializer: Jason
+
+config :sprinkler, :auth, %{
+    name:       name,
+    auth_token: auth_token,
+  }
+
+config :sprinkler, :gnat_connection, %{
+    name: :gnat,
+    connection_settings: [
+      %{host: 'nats.riesd.com', port: 4223, tls: true, username: System.get_env("NATS_USER"), password: System.get_env("NATS_PASS")},
+    ]
+  }
+
+config :sprinkler, :gnat_consumer, %{
+    connection_name: :gnat,
+    consuming_function: {Sprinkler.Command, :decode},
+    subscription_topics: [
+      %{topic: "sprinkler.commands.#{name}", queue_group: "sprinkler.commands.#{name}"},
+    ],
+  }
 
 # Import target specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
