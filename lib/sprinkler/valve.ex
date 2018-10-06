@@ -49,6 +49,7 @@ defmodule Sprinkler.Valve do
     alias ElixirALE.GPIO
 
     def init(%{pin: pin_number, name: name}) do
+      Registry.register(@registry, name, name)
       {:ok, gpio} = GPIO.start_link(pin_number, :output)
       :ok = GPIO.write(gpio, 1)
       {:ok, {gpio, :off}}
