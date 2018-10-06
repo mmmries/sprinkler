@@ -21,10 +21,6 @@ config :shoehorn,
   init: [:nerves_runtime, :nerves_init_gadget, :runtime_tools, :nerves_leds],
   app: Mix.Project.config()[:app]
 
-config :sprinkler, Sprinkler.Socket,
-  url: System.get_env("WEBSOCKET_ADDRESS") || "ws://localhost:4000/socket/websocket",
-  serializer: Jason
-
 config :sprinkler, :auth, %{
     name:       name,
     auth_token: auth_token,
@@ -33,7 +29,13 @@ config :sprinkler, :auth, %{
 config :sprinkler, :gnat_connection, %{
     name: :gnat,
     connection_settings: [
-      %{host: 'nats.riesd.com', port: 4223, tls: true, username: System.get_env("NATS_USER"), password: System.get_env("NATS_PASS")},
+      %{
+        host: System.get_env("NATS_HOST") || "localhost",
+        port: (System.get_env("NATS_PORT") || "4222") |> String.to_integer(),
+        tls:  (System.get_env("NATS_TLS") || "false") |> String.to_atom(),
+        username: System.get_env("NATS_USER"),
+        password: System.get_env("NATS_PASS")
+      },
     ]
   }
 
