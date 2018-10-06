@@ -1,7 +1,6 @@
 defmodule Sprinkler.Reporter do
   use GenServer
   @idle_timeout 300_000
-  @zones [:zone1, :zone2, :zone3, :zone4, :zone5, :zone6, :zone7, :zone8]
 
   def start_link(opts) do
     GenServer.start_link(__MODULE__, nil, opts)
@@ -25,17 +24,17 @@ defmodule Sprinkler.Reporter do
     {:noreply, state, @idle_timeout}
   end
 
-  defp gather_status(zone) do
+  defp gather_status(name) do
     status = try do
-               Sprinkler.Valve.status(zone)
+               Sprinkler.Valve.status(name)
              catch :exit, _ ->
                :unknown
              end
-    %{"name" => zone, "status" => status}
+    %{"name" => name, "status" => status}
   end
 
   defp report_status do
-    @zones
+    Sprinkler.valves()
     |> Enum.map(&gather_status/1)
     |> send_status
   end

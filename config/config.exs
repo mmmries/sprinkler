@@ -45,6 +45,17 @@ config :sprinkler, :gnat_consumer, %{
     ],
   }
 
+config :sprinkler, :valves, [
+  %{pin:  4, name: "zone1"},
+  %{pin: 17, name: "zone2"},
+  %{pin: 18, name: "zone3"},
+  %{pin: 27, name: "zone4"},
+  %{pin: 22, name: "zone5"},
+  %{pin: 23, name: "zone6"},
+  %{pin: 24, name: "zone7"},
+  %{pin: 25, name: "zone8"},
+]
+
 # Import target specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 # Uncomment to use target specific configurations

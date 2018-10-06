@@ -1,27 +1,24 @@
 defmodule Sprinkler.Valve do
   use GenServer
-  alias ElixirALE.GPIO
+  @target Mix.Project.config()[:target]
+  @registry :valve_registry
 
-  def start_link({pin_number, name}) do
-    GenServer.start_link(__MODULE__, pin_number, name: name)
+  def start_link(valve_init) do
+    GenServer.start_link(__MODULE__, valve_init)
   end
 
-  def status(valve), do: GenServer.call(valve, :status)
-  def turn_off(valve), do: GenServer.call(valve, :turn_off)
-  def turn_on(valve),  do: GenServer.call(valve, :turn_on)
+  def status(valve), do: GenServer.call({:via, Registry, {@registry, valve}}, :status)
+  def turn_off(valve), do: GenServer.call({:via, Registry, {@registry, valve}}, :turn_off)
+  def turn_on(valve),  do: GenServer.call({:via, Registry, {@registry, valve}}, :turn_on)
 
-  def init(pin_number) do
-    {:ok, gpio} = GPIO.start_link(pin_number, :output)
-    :ok = GPIO.write(gpio, 1)
-    {:ok, {gpio, :off}}
-  end
+  # init is defined per @target below
 
   def handle_call(:status, _from, {gpio, status}) do
     {:reply, status, {gpio, status}}
   end
 
   def handle_call(:turn_on, _from, {gpio, :off}) do
-    result = GPIO.write(gpio, 0)
+    result = turn_on_pin(gpio)
     Sprinkler.Reporter.nudge()
     {:reply, result, {gpio, :on}}
   end
@@ -35,8 +32,29 @@ defmodule Sprinkler.Valve do
   end
 
   def handle_call(:turn_off, _from, {gpio, :on}) do
-    result = GPIO.write(gpio, 1)
+    result = turn_off_pin(gpio)
     Sprinkler.Reporter.nudge()
     {:reply, result, {gpio, :off}}
+  end
+
+  if @target == "host" do
+    def init(%{pin: pin_number, name: name}) do
+      Registry.register(@registry, name, name)
+      {:ok, {nil, :off}}
+    end
+
+    defp turn_on_pin(_), do: :ok
+    defp turn_off_pin(_), do: :ok
+  else
+    alias ElixirALE.GPIO
+
+    def init(%{pin: pin_number, name: name}) do
+      {:ok, gpio} = GPIO.start_link(pin_number, :output)
+      :ok = GPIO.write(gpio, 1)
+      {:ok, {gpio, :off}}
+    end
+
+    def turn_on_pin(gpio), do: GPIO.write(gpio, 0)
+    def turn_off_pin(gpio), do: GPIO.write(gpio, 1)
   end
 end

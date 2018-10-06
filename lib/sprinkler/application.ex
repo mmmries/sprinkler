@@ -11,32 +11,25 @@ defmodule Sprinkler.Application do
   end
 
   def children do
-    list = children(@target)
-    [
+    device_children = children(@target)
+    general_behaviors = [
+      {Registry, keys: :unique, name: :valve_registry},
       {DynamicSupervisor, strategy: :one_for_one, name: :scheduler},
       {Gnat.ConnectionSupervisor, Application.get_env(:sprinkler, :gnat_connection)},
       {Gnat.ConsumerSupervisor, Application.get_env(:sprinkler, :gnat_consumer)},
-      {Sprinkler.Reporter, name: Sprinkler.Reporter}
-      | list
+      {Sprinkler.Reporter, name: Sprinkler.Reporter},
     ]
+    valves = Enum.map(Application.get_env(:sprinkler, :valves), fn(%{name: name}=valve_init) ->
+      %{id: name, start: {Sprinkler.Valve, :start_link, [valve_init]}}
+    end)
+    device_children ++ general_behaviors ++ valves
   end
 
-  def children("host") do
+  defp children("host") do
     []
   end
 
-  def children(_target) do
-    import Supervisor.Spec
-    [
-      {Sprinkler.Blinky, nil},
-      worker(Sprinkler.Valve, [{4,  :zone1}], id: :zone1),
-      worker(Sprinkler.Valve, [{17, :zone2}], id: :zone2),
-      worker(Sprinkler.Valve, [{18, :zone3}], id: :zone3),
-      worker(Sprinkler.Valve, [{27, :zone4}], id: :zone4),
-      worker(Sprinkler.Valve, [{22, :zone5}], id: :zone5),
-      worker(Sprinkler.Valve, [{23, :zone6}], id: :zone6),
-      worker(Sprinkler.Valve, [{24, :zone7}], id: :zone7),
-      worker(Sprinkler.Valve, [{25, :zone8}], id: :zone8),
-    ]
+  defp children(_target) do
+    [{Sprinkler.Blinky, nil}]
   end
 end

@@ -1,6 +1,4 @@
 defmodule Sprinkler do
-  @zones [:zone1, :zone2, :zone3, :zone4, :zone5, :zone6, :zone7, :zone8]
-
   def name do
     Application.get_env(:sprinkler, :auth) |> Map.get(:name)
   end
@@ -20,10 +18,15 @@ defmodule Sprinkler do
   end
 
   def turn_on_all do
-    @zones |> Enum.each(&( Sprinkler.Valve.turn_on(&1) ))
+    valves() |> Enum.each(&( Sprinkler.Valve.turn_on(&1) ))
   end
 
   def turn_off_all do
-    @zones |> Enum.each(&( Sprinkler.Valve.turn_off(&1) ))
+    valves() |> Enum.each(&( Sprinkler.Valve.turn_off(&1) ))
+  end
+
+  def valves do
+    Application.get_env(:sprinkler, :valves)
+    |> Enum.map(&( Map.get(&1, :name) ))
   end
 end
