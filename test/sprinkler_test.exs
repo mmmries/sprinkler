@@ -2,7 +2,11 @@ defmodule SprinklerTest do
   use ExUnit.Case
   doctest Sprinkler
 
-  test "greets the world" do
-    assert Sprinkler.hello() == :world
+  test "knows its own name" do
+    assert Sprinkler.name() == "example"
+  end
+
+  test "knows its own auth token" do
+    assert Sprinkler.auth_token() == ""
   end
 end
