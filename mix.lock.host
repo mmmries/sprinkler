@@ -4,6 +4,7 @@
   "crontab": {:hex, :crontab, "1.1.4", "eae8de759d60dec2352ca577890f4cac26bcb907088ffef958f42ebb9c4f4cff", [:mix], [{:ecto, "~> 1.0 or ~> 2.0 or ~> 2.1", [hex: :ecto, repo: "hexpm", optional: true]}], "hexpm"},
   "distillery": {:hex, :distillery, "1.5.3", "b2f4fc34ec71ab4f1202a796f9290e068883b042319aa8c9aa45377ecac8597a", [:mix], [], "hexpm"},
   "gettext": {:hex, :gettext, "0.16.0", "4a7e90408cef5f1bf57c5a39e2db8c372a906031cc9b1466e963101cb927dafc", [:mix], [], "hexpm"},
+  "gnat": {:hex, :gnat, "0.5.2", "7785a0dd61b28719b65c23d41c0652d60e896ac04696eedc068c6dbe4aaff65d", [:mix], [{:jason, "~> 1.1", [hex: :jason, repo: "hexpm", optional: false]}], "hexpm"},
   "hackney": {:hex, :hackney, "1.14.0", "66e29e78feba52176c3a4213d42b29bdc4baff93a18cfe480f73b04677139dee", [:rebar3], [{:certifi, "2.4.2", [hex: :certifi, repo: "hexpm", optional: false]}, {:idna, "6.0.0", [hex: :idna, repo: "hexpm", optional: false]}, {:metrics, "1.0.1", [hex: :metrics, repo: "hexpm", optional: false]}, {:mimerl, "1.0.2", [hex: :mimerl, repo: "hexpm", optional: false]}, {:ssl_verify_fun, "1.1.4", [hex: :ssl_verify_fun, repo: "hexpm", optional: false]}], "hexpm"},
   "idna": {:hex, :idna, "6.0.0", "689c46cbcdf3524c44d5f3dde8001f364cd7608a99556d8fbd8239a5798d4c10", [:rebar3], [{:unicode_util_compat, "0.4.1", [hex: :unicode_util_compat, repo: "hexpm", optional: false]}], "hexpm"},
   "jason": {:hex, :jason, "1.1.1", "d3ccb840dfb06f2f90a6d335b536dd074db748b3e7f5b11ab61d239506585eb2", [:mix], [{:decimal, "~> 1.0", [hex: :decimal, repo: "hexpm", optional: true]}], "hexpm"},

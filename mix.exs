@@ -37,7 +37,7 @@ defmodule Sprinkler.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:gnat, path: "../gnat"},
+      {:gnat, "~> 0.5.2"},
       {:jason, "~> 1.1"},
       {:nerves, "~> 1.0", runtime: false},
       {:sched_ex, "~> 1.0"},
