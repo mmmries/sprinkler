@@ -15,8 +15,8 @@ defmodule Sprinkler.Application do
     general_behaviors = [
       {Registry, keys: :unique, name: :valve_registry},
       {DynamicSupervisor, strategy: :one_for_one, name: :scheduler},
-      {Gnat.ConnectionSupervisor, Application.get_env(:sprinkler, :gnat_connection)},
-      {Gnat.ConsumerSupervisor, Application.get_env(:sprinkler, :gnat_consumer)},
+      {Sprinkler.Socket, [strategy: :one_for_one, name: Sprinkler.Socket]},
+      {Sprinkler.Channel, {[socket: Sprinkler.Socket, topic: "sprinkler"], [name: Sprinkler.Channel]}},
       {Sprinkler.Reporter, name: Sprinkler.Reporter},
     ]
     valves = Enum.map(Application.get_env(:sprinkler, :valves), fn(%{name: name}=valve_init) ->
