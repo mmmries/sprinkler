@@ -7,9 +7,6 @@ use Mix.Config
 
 target = Mix.Project.config()[:target]
 
-name = System.get_env("SPRINKLER_NAME") || "example"
-auth_token = System.get_env("SPRINKLER_AUTH_TOKEN") || ""
-
 # Customize non-Elixir parts of the firmware.  See
 # https://hexdocs.pm/nerves/advanced-configuration.html for details.
 config :nerves, :firmware, rootfs_overlay: "rootfs_overlay"
@@ -21,31 +18,11 @@ config :shoehorn,
   init: [:nerves_runtime, :nerves_init_gadget, :runtime_tools, :nerves_leds],
   app: Mix.Project.config()[:app]
 
-config :sprinkler, :auth, %{
-    name:       name,
-    auth_token: auth_token,
-  }
+config :sprinkler, :auth_token, System.get_env("SPRINKLER_AUTH_TOKEN") || ""
 
-config :sprinkler, :gnat_connection, %{
-    name: :gnat,
-    connection_settings: [
-      %{
-        host: System.get_env("NATS_HOST") || "localhost",
-        port: (System.get_env("NATS_PORT") || "4222") |> String.to_integer(),
-        tls:  (System.get_env("NATS_TLS") || "false") |> String.to_atom(),
-        username: System.get_env("NATS_USER"),
-        password: System.get_env("NATS_PASS")
-      },
-    ]
-  }
-
-config :sprinkler, :gnat_consumer, %{
-    connection_name: :gnat,
-    consuming_function: {Sprinkler.Command, :decode},
-    subscription_topics: [
-      %{topic: "sprinkler.commands.#{name}", queue_group: "sprinkler.commands.#{name}"},
-    ],
-  }
+config :sprinkler, Sprinkler.Socket,
+  url: System.get_env("WEBSOCKET_ADDRESS") || "ws://127.0.0.1:4000/socket/websocket",
+  serializer: Jason
 
 config :sprinkler, :valves, [
   %{pin:  4, name: "zone1"},

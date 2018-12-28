@@ -30,18 +30,19 @@ defmodule Sprinkler.MixProject do
   def application do
     [
       mod: {Sprinkler.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :ssl]
     ]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:gnat, "~> 0.5.2"},
       {:jason, "~> 1.1"},
-      {:nerves, "~> 1.0", runtime: false},
+      {:phoenix_channel_client, "~> 0.4"},
+      {:nerves, "~> 1.2", runtime: false},
       {:sched_ex, "~> 1.0"},
       {:shoehorn, "~> 0.2"},
+      {:websocket_client, "~> 1.3"}
     ] ++ deps(@target)
   end
 

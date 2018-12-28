@@ -1,17 +1,9 @@
 defmodule Sprinkler.Command do
   require Logger
 
-  def decode(%{body: json, reply_to: reply_to}) do
-    case json |> Jason.decode! |> auth() do
-      {:reply, response} ->
-        Gnat.pub(:gnat, reply_to, Jason.encode!(response))
-      _other -> nil
-    end
-  end
-
   def auth(%{"auth_token" => token}=command) do
     if token == Sprinkler.auth_token() do
-    process(command)
+      process(command)
     else
       Logger.error("AUTH ERROR")
       {:reply, %{"status" => 403, "message" => "Invalid Auth Token"}}

@@ -11,6 +11,7 @@ defmodule Sprinkler.Reporter do
   end
 
   def init(nil) do
+    PhoenixChannelClient.join(Sprinkler.Channel)
     {:ok, nil, @idle_timeout}
   end
 
@@ -40,7 +41,6 @@ defmodule Sprinkler.Reporter do
   end
 
   defp send_status(zones) do
-    {:ok, msg} = Jason.encode(%{"zones" => zones})
-    Gnat.pub(:gnat, "sprinkler.zones.#{Sprinkler.name()}", msg)
+    PhoenixChannelClient.push(Sprinkler.Channel, "zone_status", %{"zones" => zones})
   end
 end
