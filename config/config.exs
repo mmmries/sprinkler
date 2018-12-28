@@ -24,6 +24,11 @@ config :sprinkler, Sprinkler.Socket,
   url: System.get_env("WEBSOCKET_ADDRESS") || "ws://127.0.0.1:4000/socket/websocket",
   serializer: Jason
 
+config :sprinkler, :garage_doors, [
+  %{name: "big", sensor_pin: 16},
+  %{name: "small", sensor_pin: 12},
+]
+
 config :sprinkler, :valves, [
   %{pin:  4, name: "zone1"},
   %{pin: 17, name: "zone2"},
