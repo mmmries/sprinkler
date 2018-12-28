@@ -2,6 +2,13 @@ defmodule Sprinkler.Channel do
   use PhoenixChannelClient
   require Logger
 
+  def handle_in("command", command, state) do
+    Task.async(fn ->
+      {:reply, message} = Sprinkler.Command.auth(command)
+      PhoenixChannelClient.push(__MODULE__, "response", message)
+    end)
+    {:noreply, state}
+  end
   def handle_in(event, payload, state) do
     Logger.debug("RECEIVED #{event} :: #{inspect payload}")
     {:noreply, state}

@@ -1,10 +1,6 @@
 defmodule Sprinkler do
-  def name do
-    Application.get_env(:sprinkler, :auth) |> Map.get(:name)
-  end
-
   def auth_token do
-    Application.get_env(:sprinkler, :auth) |> Map.get(:auth_token)
+    Application.get_env(:sprinkler, :auth_token)
   end
 
   # Example of scheduling a zone to turn on and off
