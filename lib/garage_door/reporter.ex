@@ -27,7 +27,8 @@ defmodule GarageDoor.Reporter do
 
   defp gather_status(%{name: name}) do
     status = try do
-               GarageDoor.status(name)
+               {:ok, status} = GarageDoor.status(name)
+               status
              catch :exit, _ ->
                :unknown
              end
@@ -37,6 +38,7 @@ defmodule GarageDoor.Reporter do
   defp report_status do
     GarageDoor.doors()
     |> Enum.map(&gather_status/1)
+    |> IO.inspect(label: "door_status")
     |> send_status()
   end
 
