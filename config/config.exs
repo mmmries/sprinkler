@@ -21,7 +21,7 @@ config :shoehorn,
 config :sprinkler, :auth_token, System.get_env("SPRINKLER_AUTH_TOKEN") || ""
 
 config :sprinkler, Sprinkler.Socket,
-  url: System.get_env("WEBSOCKET_ADDRESS"),
+  url: System.get_env("WEBSOCKET_ADDRESS") || "ws://127.0.0.1:4000/socket/websocket",
   serializer: Jason
 
 config :sprinkler, :valves, [
