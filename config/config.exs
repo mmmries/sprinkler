@@ -76,4 +76,6 @@ if target != "host" do
     "2.us.pool.ntp.org",
     "3.us.pool.ntp.org",
   ]
+
+  config :tzdata, :data_dir, "/root/tzdata"
 end
