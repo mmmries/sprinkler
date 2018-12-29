@@ -38,7 +38,6 @@ defmodule GarageDoor.Reporter do
   defp report_status do
     GarageDoor.doors()
     |> Enum.map(&gather_status/1)
-    |> IO.inspect(label: "door_status")
     |> send_status()
   end
 

@@ -8,7 +8,6 @@ defmodule GarageDoor.Channel do
   end
 
   def handle_reply({:timeout, :join}, state) do
-    Logger.debug("#{__MODULE__} JOIN TIMEOUT")
     Process.send_after(self(), :rejoin, 5_000)
     {:noreply, state}
   end
@@ -17,7 +16,7 @@ defmodule GarageDoor.Channel do
     {:noreply, state}
   end
   def handle_reply({status, event, payload, _ref}, state) do
-    Logger.debug("#{__MODULE__} REPLY #{status} :: #{event} :: #{inspect payload}")
+    Logger.debug("#{__MODULE__} REPLY #{inspect(status)} :: #{inspect(event)} :: #{inspect payload}")
     {:noreply, state}
   end
 
