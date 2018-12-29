@@ -17,12 +17,17 @@ defmodule Sprinkler.Application do
       {DynamicSupervisor, strategy: :one_for_one, name: :scheduler},
       {Sprinkler.Socket, [strategy: :one_for_one, name: Sprinkler.Socket]},
       {Sprinkler.Channel, {[socket: Sprinkler.Socket, topic: "sprinkler"], [name: Sprinkler.Channel]}},
+      {GarageDoor.Channel, {[socket: Sprinkler.Socket, topic: "garage_doors"], [name: GarageDoor.Channel]}},
       {Sprinkler.Reporter, name: Sprinkler.Reporter},
+      {GarageDoor.Reporter, name: GarageDoor.Reporter},
     ]
     valves = Enum.map(Application.get_env(:sprinkler, :valves), fn(%{name: name}=valve_init) ->
       %{id: name, start: {Sprinkler.Valve, :start_link, [valve_init]}}
     end)
-    device_children ++ general_behaviors ++ valves
+    garage_doors = Enum.map(GarageDoor.doors(), fn(%{name: name}=door) ->
+      %{id: name, start: {GarageDoor, :start_link, [door]}}
+    end)
+    device_children ++ general_behaviors ++ valves ++ garage_doors
   end
 
   defp children("host") do

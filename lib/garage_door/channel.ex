@@ -1,21 +1,13 @@
-defmodule Sprinkler.Channel do
+defmodule GarageDoor.Channel do
   use PhoenixChannelClient
   require Logger
 
-  def handle_in("command", command, state) do
-    Task.async(fn ->
-      {:reply, message} = Sprinkler.Command.auth(command)
-      PhoenixChannelClient.push(__MODULE__, "response", message)
-    end)
-    {:noreply, state}
-  end
   def handle_in(event, payload, state) do
     Logger.debug("#{__MODULE__} RECEIVED #{event} :: #{inspect payload}")
     {:noreply, state}
   end
 
   def handle_reply({:timeout, :join}, state) do
-    Logger.debug("#{__MODULE__} JOIN TIMEOUT")
     Process.send_after(self(), :rejoin, 5_000)
     {:noreply, state}
   end
@@ -24,7 +16,7 @@ defmodule Sprinkler.Channel do
     {:noreply, state}
   end
   def handle_reply({status, event, payload, _ref}, state) do
-    Logger.debug("#{__MODULE__} REPLY #{status} :: #{event} :: #{inspect payload}")
+    Logger.debug("#{__MODULE__} REPLY #{inspect(status)} :: #{inspect(event)} :: #{inspect payload}")
     {:noreply, state}
   end
 
