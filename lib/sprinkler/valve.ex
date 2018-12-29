@@ -38,7 +38,7 @@ defmodule Sprinkler.Valve do
   end
 
   if @target == "host" do
-    def init(%{pin: pin_number, name: name}) do
+    def init(%{name: name}) do
       Registry.register(@registry, name, name)
       {:ok, {nil, :off}}
     end
