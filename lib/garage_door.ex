@@ -1,6 +1,5 @@
 defmodule GarageDoor do
   use GenServer
-  @target Mix.Project.config()[:target]
   @registry :valve_registry
 
   def start_link(door) do
@@ -27,7 +26,7 @@ defmodule GarageDoor do
     {:noreply, state}
   end
 
-  if @target == "host" do
+  if Mix.target() == :host do
     @impl GenServer
     def init(%{name: name}) do
       Registry.register(@registry, name, name)

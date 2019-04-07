@@ -1,6 +1,5 @@
 defmodule Sprinkler.Valve do
   use GenServer
-  @target Mix.Project.config()[:target]
   @registry :valve_registry
 
   def start_link(valve_init) do
@@ -10,8 +9,6 @@ defmodule Sprinkler.Valve do
   def status(valve), do: GenServer.call({:via, Registry, {@registry, valve}}, :status)
   def turn_off(valve), do: GenServer.call({:via, Registry, {@registry, valve}}, :turn_off)
   def turn_on(valve),  do: GenServer.call({:via, Registry, {@registry, valve}}, :turn_on)
-
-  # init is defined per @target below
 
   def handle_call(:status, _from, {gpio, status}) do
     {:reply, status, {gpio, status}}
@@ -37,7 +34,7 @@ defmodule Sprinkler.Valve do
     {:reply, result, {gpio, :off}}
   end
 
-  if @target == "host" do
+  if Mix.target() == :host do
     def init(%{name: name}) do
       Registry.register(@registry, name, name)
       {:ok, {nil, :off}}

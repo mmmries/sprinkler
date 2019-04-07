@@ -1,7 +1,7 @@
 defmodule Sprinkler.Application do
   @moduledoc false
 
-  @target Mix.Project.config()[:target]
+  @target Mix.target()
 
   use Application
 
@@ -30,7 +30,7 @@ defmodule Sprinkler.Application do
     device_children ++ general_behaviors ++ valves ++ garage_doors
   end
 
-  defp children("host") do
+  defp children(:host) do
     []
   end
 

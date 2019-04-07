@@ -5,8 +5,6 @@
 # is restricted to this project.
 use Mix.Config
 
-target = Mix.Project.config()[:target]
-
 # Customize non-Elixir parts of the firmware.  See
 # https://hexdocs.pm/nerves/advanced-configuration.html for details.
 config :nerves, :firmware, rootfs_overlay: "rootfs_overlay"
@@ -43,7 +41,7 @@ config :sprinkler, :valves, [
 # Import target specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 # Uncomment to use target specific configurations
-if target != "host" do
+if Mix.target() != :host do
   config :nerves_firmware_ssh,
     authorized_keys: [
       File.read!(Path.join(System.user_home!(), ".ssh/id_rsa.pub"))
